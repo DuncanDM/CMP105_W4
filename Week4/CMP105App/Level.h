@@ -5,7 +5,10 @@
 #include "Framework/GameObject.h"
 #include <string.h>
 #include <iostream>
-
+#include "Player.h"
+#include "Enemy.h"
+#include "Cursor.h"
+#include "Background.h"
 
 class Level{
 public:
@@ -29,4 +32,21 @@ private:
 	GameObject testSprite;
 	sf::Texture texture;
 
+	Player player;
+
+	Enemy enemy;
+	sf::Texture enemyTexture;
+
+	Enemy enemy2;
+	sf::Texture enemy2Texture;
+
+	Cursor cursor;
+
+	Background background;
+
+	sf::View view;
+
+	float speed;
+	float viewPos;
+	float winSize;
 };

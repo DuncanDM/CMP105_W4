@@ -6,12 +6,23 @@ Level::Level(sf::RenderWindow* hwnd, Input* in)
 	input = in;
 
 	// initialise game objects
-	texture.loadFromFile("gfx/Mushroom.png");
 
-	testSprite.setTexture(&texture);
-	testSprite.setSize(sf::Vector2f(100, 100));
-	testSprite.setPosition(100, 100);
+	player.setInput(input);
 
+	enemy.GetWindow(window);
+	enemyTexture.loadFromFile("gfx/Goomba.png");
+	enemy.enemyObject.setTexture(&enemyTexture);
+	enemy.enemyObject.setPosition(100, 300);
+
+	enemy2.GetWindow(window);
+	enemy2Texture.loadFromFile("gfx/Block.png");
+	enemy2.enemyObject.setTexture(&enemy2Texture);
+	enemy2.enemyObject.setPosition(400, 500);
+
+	cursor.GetVar(window, input);
+
+	view = window->getView();
+	speed = 500.0f;
 }
 
 Level::~Level()
@@ -28,12 +39,34 @@ void Level::handleInput(float dt)
 		window->close();
 	}
 
+	viewPos = view.getCenter().x;
+
+	winSize = window->getSize().x;
+
+	if (input->isKeyDown(sf::Keyboard::D) && viewPos <= 11038 - winSize / 2)
+	{
+		view = window->getView();
+		view.move(speed * dt, 0);
+		window->setView(view);
+	}
+
+	if (input->isKeyDown(sf::Keyboard::A) && viewPos >= 0 + winSize / 2)
+	{
+		view = window->getView();
+		view.move(-speed * dt, 0);
+		window->setView(view);
+	}
+
+	player.handleInput(dt);
 }
 
 // Update game objects
 void Level::update(float dt)
 {
-	
+	enemy.update(dt);
+	enemy2.update(dt);
+
+	cursor.update(dt);
 }
 
 // Render level
@@ -41,7 +74,11 @@ void Level::render()
 {
 	beginDraw();
 
-	window->draw(testSprite);
+	window->draw(background.backgroundObj);
+	window->draw(player.playerObject);
+	window->draw(enemy.enemyObject);
+	window->draw(enemy2.enemyObject);
+	window->draw(cursor.cursorObj);
 
 	endDraw();
 }
